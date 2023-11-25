@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { Button, Box, Center } from '@chakra-ui/react';
 
 function App() {
+  const [colour, setColor] = useState('#FFFFFF');
+  const [colourHistory, setColorHistory] = useState(['#FFFF11', '#FF11FF', '#11FFFF']);
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let newColor = '#';
+    for (let i = 0; i < 6; i++) {
+      newColor += letters[Math.floor(Math.random() * 16)];
+    }
+    return newColor;
+  }
+
+  function handleChangeColour() {
+    const newColor = getRandomColor();
+    setColor(newColor);
+    setColorHistory((prevHistory) => [newColor, ...prevHistory.slice(0, 2)]); // Keep only the last 3 colours
+  }
+
+  const thirdLastColor = colourHistory[2];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box style={{ backgroundColor: colour, minHeight: '100vh' }}>
+      <Center height="100vh">
+        <Button
+          colourScheme="teal"
+          backgroundColor={colourHistory[1]} // Second last colour as the current background
+          _hover={{ backgroundColor: thirdLastColor }} // Third last colour on hover
+          onClick={handleChangeColour}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Change Colour
+        </Button>
+      </Center>
+    </Box>
   );
 }
 
