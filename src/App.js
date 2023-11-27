@@ -49,11 +49,12 @@ function App() {
       <Center height="100vh">
         <Button
           colorScheme="teal"
+          color="grey"
           bg={colourHistory[1]}
           _hover={{ bg: thirdLastColor }}
           onClick={handleChangeColour}
         >
-          Change Colour
+          Change Colour (Work In Progress)
         </Button>
       </Center>
     </Box>
