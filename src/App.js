@@ -5,7 +5,7 @@ import Web3 from 'web3';
 function App() {
   const [colour, setColor] = useState('#FFFFFF');
   const [colourHistory, setColorHistory] = useState(['#FFFF11', '#FF11FF', '#11FFFF']);
-  const web3 = new Web3(Web3.givenProvider || "wss://mainnet.infura.io/ws/v3/b69f26c9f68849328989cca2d9095470");
+  const web3 = new Web3(Web3.givenProvider || process.env.REACT_APP_INFURA_URL);
   const [block, setBlock] = useState(web3.eth.getBlockNumber())
 
   function getRandomColor() {
