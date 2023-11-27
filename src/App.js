@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Box, Center } from '@chakra-ui/react';
+import Web3 from 'web3';
 
 function App() {
   const [colour, setColor] = useState('#FFFFFF');
   const [colourHistory, setColorHistory] = useState(['#FFFF11', '#FF11FF', '#11FFFF']);
+  const web3 = new Web3(Web3.givenProvider || "wss://mainnet.infura.io/ws/v3/b69f26c9f68849328989cca2d9095470");
+  const [block, setBlock] = useState(web3.eth.getBlockNumber())
 
   function getRandomColor() {
     const letters = '0123456789ABCDEF';
@@ -14,21 +17,40 @@ function App() {
     return newColor;
   }
 
-  function handleChangeColour() {
+  const handleChangeColour = useCallback(() => {
     const newColor = getRandomColor();
     setColor(newColor);
-    setColorHistory((prevHistory) => [newColor, ...prevHistory.slice(0, 2)]); // Keep only the last 3 colours
-  }
+    setColorHistory((prevHistory) => [newColor, ...prevHistory.slice(0, 2)]);
+  }, []);
+
+  useEffect(() => {
+    let intervalId;
+
+    const checkBlockNumber = () => {
+      web3.eth.getBlockNumber()
+        .then(newBlockNumber => {
+          if (newBlockNumber !== block) {
+            setBlock(newBlockNumber);
+            handleChangeColour();
+          }
+        })
+        .catch(console.error);
+    };
+
+    intervalId = setInterval(checkBlockNumber, 7500);
+
+    return () => clearInterval(intervalId); 
+  }, [block, handleChangeColour, web3.eth]);
 
   const thirdLastColor = colourHistory[2];
 
   return (
-    <Box style={{ backgroundColor: colour, minHeight: '100vh' }}>
+    <Box bg={colour} minHeight="100vh">
       <Center height="100vh">
         <Button
-          colourScheme="teal"
-          backgroundColor={colourHistory[1]} // Second last colour as the current background
-          _hover={{ backgroundColor: thirdLastColor }} // Third last colour on hover
+          colorScheme="teal"
+          bg={colourHistory[1]}
+          _hover={{ bg: thirdLastColor }}
           onClick={handleChangeColour}
         >
           Change Colour
