@@ -52,7 +52,7 @@ function App() {
     fetchBlockData();
     const intervalId = setInterval(fetchBlockData, 7500);
     return () => clearInterval(intervalId); 
-  }, [handleChangeColour]); 
+  }, [block, handleChangeColour, web3.eth, web3.utils]); 
 
   const thirdLastColor = colourHistory[2];
 
