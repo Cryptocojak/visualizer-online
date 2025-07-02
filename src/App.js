@@ -48,8 +48,8 @@ function App() {
 
   // Breathing animation keyframes
   const breathe = keyframes`
-    0%, 100% { filter: brightness(0.95); }
-    50% { filter: brightness(1.08); }
+    0%, 100% { filter: saturate(0.35); filter: brightness(0.85); }
+    50% { filter: saturate(1.58); filter: brightness(1.12);}
   `;
 
   const getRandomColour = useCallback(() => {
@@ -158,7 +158,7 @@ function App() {
       minHeight="100vh"
       position="relative"
       overflow="hidden"
-      animation={`${breathe} 5s ease-in-out infinite`}
+      animation={`${breathe} 10s ease-in-out infinite`}
     >
       {/* Background SVG with shapes */}
       <svg
@@ -233,11 +233,12 @@ function App() {
       >
         <Button
           colorScheme="teal"
+          color="grey"
           bg={colourHistory[1]}
           _hover={{ bg: colourHistory[2] }}
           onClick={handleChangeColour}
         >
-          Change Colour
+          Change Color
         </Button>
 
         <FormControl display="flex" alignItems="center" justifyContent="center">
@@ -265,7 +266,7 @@ function App() {
         )}
 
         {/* Shape slider at the bottom */}
-        <Box width="20%" mt={4}>
+        <Box width="30%" mt={4}>
           <FormControl>
             <FormLabel>More or less: {drawCount}</FormLabel>
             <Slider
