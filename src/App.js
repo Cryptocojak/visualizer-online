@@ -11,6 +11,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  keyframes,
 } from '@chakra-ui/react';
 import Web3 from 'web3';
 
@@ -45,6 +46,12 @@ function App() {
     )
   ).current;
 
+  // Breathing animation keyframes
+  const breathe = keyframes`
+    0%, 100% { filter: brightness(0.95); }
+    50% { filter: brightness(1.08); }
+  `;
+
   const getRandomColour = useCallback(() => {
     const baseValue = txCount ? Math.min(txCount, 255) : 0;
 
@@ -56,9 +63,15 @@ function App() {
       );
       return `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
     } else {
-      const red = Math.floor(Math.random() * (256 - baseValue) + baseValue);
-      const green = Math.floor(Math.random() * (256 - baseValue) + baseValue);
-      const blue = Math.floor(Math.random() * (256 - baseValue) + baseValue);
+      const red = Math.floor(
+        Math.random() * (256 - baseValue) + baseValue
+      );
+      const green = Math.floor(
+        Math.random() * (256 - baseValue) + baseValue
+      );
+      const blue = Math.floor(
+        Math.random() * (256 - baseValue) + baseValue
+      );
       return `rgb(${red}, ${green}, ${blue})`;
     }
   }, [txCount, isGrayscale]);
@@ -101,15 +114,20 @@ function App() {
             const updatedHistory = [newColour, ...prevHistory.slice(0, 2)];
             setColour(newColour);
 
-            const maxVisualSize = Math.min(windowSize.width, windowSize.height) * 0.5;
+            const maxVisualSize = Math.min(
+              windowSize.width,
+              windowSize.height
+            ) * 0.5;
             const normalizedTxCount = Math.min(txs, 200);
             const scaleFactor = normalizedTxCount / 200;
-            const visualRadius = maxVisualSize * scaleFactor / 2;
+            const visualRadius = (maxVisualSize * scaleFactor) / 2;
             const squareSide = visualRadius * Math.sqrt(2);
             const padding = visualRadius;
 
-            const x = Math.random() * (windowSize.width - 2 * padding) + padding;
-            const y = Math.random() * (windowSize.height - 2 * padding) + padding;
+            const x =
+              Math.random() * (windowSize.width - 2 * padding) + padding;
+            const y =
+              Math.random() * (windowSize.height - 2 * padding) + padding;
 
             const newShape = {
               x,
@@ -135,7 +153,13 @@ function App() {
   }, [block, web3.eth, web3.utils, getRandomColour, windowSize]);
 
   return (
-    <Box bg={colour} minHeight="100vh" position="relative" overflow="hidden">
+    <Box
+      bg={colour}
+      minHeight="100vh"
+      position="relative"
+      overflow="hidden"
+      animation={`${breathe} 5s ease-in-out infinite`}
+    >
       {/* Background SVG with shapes */}
       <svg
         style={{
@@ -157,7 +181,7 @@ function App() {
               ? 1
               : 1 - ((arr.length - 1 - index) * (1 / drawCount));
 
-            // UI box bounds with 1px padding
+            // UI box bounds with 15px padding
             const uiPadding = 1;
             const uiBox = {
               top: windowSize.height / 2 - 200 - uiPadding,
